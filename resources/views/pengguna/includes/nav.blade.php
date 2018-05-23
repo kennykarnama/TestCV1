@@ -14,22 +14,15 @@
 
             <div id="navMenu" class="navbar-menu">
                 <div class="navbar-end">
-                    <div class="navbar-item has-dropdown is-active">
+                    <div class="navbar-item has-dropdown" id="meong">
                         <a class="navbar-link">
-              Account
+              Welcome, {{Auth::user()->name}}
             </a>
 
                         <div class="navbar-dropdown">
-                            <a class="navbar-item">
-                Dashboard
-              </a>
-                            <a class="navbar-item">
-                Profile
-              </a>
-                            <a class="navbar-item">
-                Settings
-              </a>
-                            <hr class="navbar-divider">
+                
+                
+                      
                             <div class="navbar-item">
                                 <a id="logout-pengguna">Logout</a>
                             </div>
@@ -77,6 +70,19 @@ function logout() {
             // body...
             logout();
         });
+
+        $('#meong').click(function (e) {
+            // body...
+             e.stopPropagation();
+            $('#meong').addClass('is-active');
+        });
+
+
+    });
+
+    $(document).click(function () {
+        // body...
+        $('#meong').removeClass('is-active');
     });
 
 </script>
