@@ -39,6 +39,7 @@
                         <th>Arti Sebenarnya</th>
                         <th>Tanggal Pengajuan</th>
                         <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
 
@@ -83,14 +84,14 @@
         <div class="field">
               <label class="label">Singkatan</label>
               <div class="control">
-                <input class="input" type="text" placeholder="Singkatan" id="singkatan">
+                <input class="input" type="text" placeholder="Singkatan" id="kata_singkatan">
               </div>
             </div>
 
             <div class="field">
               <label class="label">Arti Sebenarnya</label>
               <div class="control">
-                <input class="input" type="text" id="arti-sebenarnya" placeholder="Arti Sebenarnya">
+                <input class="input" type="text" id="makna_singkatan" placeholder="Arti Sebenarnya">
               </div>
             </div>
 
@@ -105,6 +106,124 @@
 
 
 <script type="text/javascript">
+
+var tabel_pengajuan_singkatan;
+
+function ajukan_singkatan() {
+  // body...
+  var kata_singkatan = $('#kata_singkatan').val();
+
+  var makna_singkatan = $('#makna_singkatan').val();
+
+   swal({
+        title: "Pengajuan Singkatan Tidak Umum",
+        text: "Apakah anda yakin ?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Ajukan",
+        closeOnConfirm: false
+    }, function (isConfirm) {
+        if (!isConfirm) return;
+
+        $.ajaxSetup({
+                  headers: {
+                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  }
+              });
+
+        $.ajax({
+            url: "/pengguna/singkatan/ajukan",
+            type: "POST",
+            data: {
+
+             "kata_singkatan":kata_singkatan,
+             "makna_singkatan":makna_singkatan
+                  
+            },
+            dataType: "json",
+            success: function (data) {
+              
+              if(data==1){
+
+                swal("Done!", "Berhasil diajukan", "success");
+
+                $('#modal-pengajuan-singkatan').removeClass('is-active');
+
+                tabel_pengajuan_singkatan.ajax.reload();
+
+              }
+
+              else{
+
+                swal("failed","Gagal melakukan pengajuan","error");
+
+              }
+                
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                swal("Failed!", "Gagal melakukan pengajuan", "error");
+
+                console.log(thrownError);
+            }
+        });
+    });
+}
+
+function batalkan_pengajuan(id_singkatan) {
+  // body...
+    swal({
+        title: "Pembatalan Pengajuan Singkatan Tidak Umum",
+        text: "Apakah anda yakin ?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Batalkan",
+        closeOnConfirm: false
+    }, function (isConfirm) {
+        if (!isConfirm) return;
+
+        $.ajaxSetup({
+                  headers: {
+                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  }
+              });
+
+        $.ajax({
+            url: "{{url('pengguna/singkatan/batalkan_pengajuan')}}",
+            type: "POST",
+            data: {
+
+             "id_singkatan":id_singkatan
+                  
+            },
+            dataType: "json",
+            success: function (data) {
+              
+              if(data==1){
+
+                swal("Done!", "Berhasil dibatalkan", "success");
+
+               
+                tabel_pengajuan_singkatan.ajax.reload();
+
+              }
+
+              else{
+
+                swal("failed","Gagal melakukan pembatalan","error");
+
+              }
+                
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                swal("Failed!", "Gagal melakukan pembatalan", "error");
+
+                console.log(thrownError);
+            }
+        });
+    });
+}
     
     $(document).ready(function () {
         // body...
@@ -165,6 +284,51 @@
             // body...
             $('#modal-pengajuan-singkatan').addClass('is-active');
         });
+
+        $('#btn-ajukan').click(function () {
+          // body...
+          ajukan_singkatan();
+        });
+
+        tabel_pengajuan_singkatan = $('#tabel_pengajuan_singkatan').DataTable({
+    
+       "processing": true,
+            "serverSide": true,
+            "order": [],
+            "columnDefs": [
+    { "orderable": false, "targets": [0,4,5] }
+  ] 
+      ,
+            "ajax":{
+                     "url": "{{ url('pengguna/singkatan/daftar_pengajuan_singkatan') }}",
+                     "dataType": "json",
+                     "type": "POST",
+                     "data":{
+                      _token: "{{csrf_token()}}",
+                    
+                  }
+                   },
+            "columns": [
+                {data: 'no', name: 'no'},
+                {data: 'kata_singkatan', name: 'kata_singkatan'},
+                {data: 'makna_singkatan', name: 'makna_singkatan'},
+                {data: 'tanggal_pengajuan', name: 'tanggal_pengajuan'},
+                {data: 'status', name: 'status'},
+                {data: 'actions', name: 'actions'},
+               
+            ]
+
+    });
+
+        $('#tabel_pengajuan_singkatan tbody').on('click','.btn-batalkan-pengajuan',function () {
+          // body...
+          var id_singkatan = $(this).data('idsingkatan');
+
+          //alert(id_singkatan);
+          batalkan_pengajuan(id_singkatan);
+        });
+
+        
     });
 </script>
 @endsection

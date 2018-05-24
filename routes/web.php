@@ -44,4 +44,9 @@ Route::group(['prefix' => 'pengguna'], function () {
   Route::post('/password/reset', 'PenggunaAuth\ResetPasswordController@reset')->name('password.email');
   Route::get('/password/reset', 'PenggunaAuth\ForgotPasswordController@showLinkRequestForm')->name('password.reset');
   Route::get('/password/reset/{token}', 'PenggunaAuth\ResetPasswordController@showResetForm');
+  Route::post('/singkatan/ajukan', 'PenggunaAuth\SingkatanController@ajukan_singkatan')->name('singkatan.ajukan');
+  Route::post('/singkatan/daftar_pengajuan_singkatan', 'PenggunaAuth\SingkatanController@allPengajuanSingkatan')->name('singkatan.daftar_pengajuan_singkatan');
+  Route::post('/singkatan/batalkan_pengajuan', 'PenggunaAuth\SingkatanController@batalkan_pengajuan')->name('singkatan.batalkan_pengajuan');
+  
+  
 });
