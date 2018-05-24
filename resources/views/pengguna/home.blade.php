@@ -55,11 +55,11 @@
 
            <div class="field">
               <div class="control">
-                <textarea class="textarea is-primary" type="text" placeholder="Kritik dan Saran"></textarea>
+                <textarea class="textarea is-primary" type="text" placeholder="Kritik dan Saran" id="kritik_saran"></textarea>
               </div>
             </div>
 
-            <a class="button">
+            <a class="button" id="btn-kirim-kritiksaran">
             <span class="icon">
               <i class="fa fa-paper-plane"></i>
             </span>
@@ -224,6 +224,64 @@ function batalkan_pengajuan(id_singkatan) {
         });
     });
 }
+
+function kirim_kritik_saran() {
+  // body...
+  var konten = $('#kritik_saran').val();
+
+   swal({
+        title: "Kirim Kritik dan Saran",
+        text: "Apakah anda yakin ?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Kirim",
+        closeOnConfirm: false
+    }, function (isConfirm) {
+        if (!isConfirm) return;
+
+        $.ajaxSetup({
+                  headers: {
+                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  }
+              });
+
+        $.ajax({
+            url: "{{url('pengguna/kritik_saran/kirim')}}",
+            type: "POST",
+            data: {
+
+             "konten":konten
+                  
+            },
+            dataType: "json",
+            success: function (data) {
+              
+              if(data==1){
+
+                swal("Done!", "Berhasil dikirim", "success");
+
+               
+                
+
+              }
+
+              else{
+
+                swal("failed","Gagal melakukan pengiriman","error");
+
+              }
+                
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                swal("Failed!", "Gagal melakukan pengiriman", "error");
+
+                console.log(thrownError);
+            }
+        });
+    });
+
+}
     
     $(document).ready(function () {
         // body...
@@ -326,6 +384,10 @@ function batalkan_pengajuan(id_singkatan) {
 
           //alert(id_singkatan);
           batalkan_pengajuan(id_singkatan);
+        });
+
+        $('#btn-kirim-kritiksaran').click(function() {
+            kirim_kritik_saran();
         });
 
         
