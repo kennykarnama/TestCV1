@@ -17,10 +17,95 @@
            
            
                <div class="box" id="box-pengenalan">
-                   <p>Ini Pengenalan</p>
-               </div>
-           
+                   <div class="file">
+                    <label class="file-label">
+                      <input class="file-input" type="file" name="upload-sampel-gambar" id="upload-sampel-gambar">
+                      <span class="file-cta">
+                        <span class="file-icon">
+                          <i class="fa fa-upload"></i>
+                        </span>
+                        <span class="file-label">
+                          Choose a file…
+                        </span>
+                      </span>
+                    </label>
+                  </div>
 
+                  <progress class="progress is-success" id="progress_upload_file" value="0" max="100" style="margin-top: 15px;">60%</progress>
+               </div>
+
+               <div class="columns">
+                 <div class="column" >
+                   <div class="card">
+                      <div class="card-image">
+                        <figure class="image is-4by3" id="original_image">
+                          <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
+                        </figure>
+                      </div>
+                      <div class="card-content">
+                        <div class="media">
+                          <div class="media-content">
+                            <p class="title is-4" style="text-align: center;">Original Image</p>
+                          </div>
+                        </div>
+                      </div>
+
+                       <div class="content  has-text-centered">
+
+                       <a class="button is-outlined is-success" style="margin-bottom: 15px;">To GrayScale</a>
+                     
+                      </div>
+                  </div>
+                </div>
+
+                 <div class="column">
+                     <div class="card">
+                      <div class="card-image">
+                        <figure class="image is-4by3">
+                          <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
+                        </figure>
+                      </div>
+                      <div class="card-content">
+                        <div class="media">
+                          <div class="media-content">
+                            <p class="title is-4" style="text-align: center;">GrayScaled Image</p>
+                          </div>
+                        </div>
+                      </div>
+
+                       <div class="content  has-text-centered">
+
+                       <a class="button is-outlined is-success" style="margin-bottom: 15px;">To Binary</a>
+                     
+                      </div>
+                 </div>
+
+               </div>
+
+               <div class="column">
+                     <div class="card">
+                      <div class="card-image">
+                        <figure class="image is-4by3">
+                          <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
+                        </figure>
+                      </div>
+                      <div class="card-content">
+                        <div class="media">
+                          <div class="media-content">
+                            <p class="title is-4" style="text-align: center;">Binary Image</p>
+                          </div>
+                        </div>
+                      </div>
+
+                       <div class="content has-text-centered">
+
+                       <a class="button is-outlined is-success" style="margin-bottom: 15px;">Line Segmentation</a>
+                     
+                      </div>
+                  </div>
+                 </div>
+           
+               </div>
           
 
           
@@ -388,6 +473,37 @@ function kirim_kritik_saran() {
 
         $('#btn-kirim-kritiksaran').click(function() {
             kirim_kritik_saran();
+        });
+
+          $.ajaxSetup({
+                  headers: {
+                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  }
+              });
+
+
+          $('#upload-sampel-gambar').fileupload({
+            url: "{{url('pengguna/pengenalan/upload')}}",
+            dataType: 'json',
+            done: function (e, data) {
+
+              var response = data._response;
+
+              if(response.result.status == 200){
+                toastr.success("Sukses","Upload Berhasil");
+              }
+              else{
+                toastr.error("Gagal","Upload Gagal");
+              }
+              
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                
+                $('#progress_upload_file').attr('value',progress);
+
+               
+            }
         });
 
         

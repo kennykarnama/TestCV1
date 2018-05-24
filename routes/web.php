@@ -48,6 +48,7 @@ Route::group(['prefix' => 'pengguna'], function () {
   Route::post('/singkatan/daftar_pengajuan_singkatan', 'PenggunaAuth\SingkatanController@allPengajuanSingkatan')->name('singkatan.daftar_pengajuan_singkatan');
   Route::post('/singkatan/batalkan_pengajuan', 'PenggunaAuth\SingkatanController@batalkan_pengajuan')->name('singkatan.batalkan_pengajuan');
   Route::post('/kritik_saran/kirim', 'PenggunaAuth\KritikSaranController@kirim_kritik_saran')->name('kritik_saran.kirim');
+  Route::post('/pengenalan/upload', 'PenggunaAuth\UploadSampelGambarController@upload_sampel_gambar')->name('pengenalan.upload');
   
   
 });
