@@ -17,6 +17,8 @@
            
            
                <div class="box" id="box-pengenalan">
+
+               <p>{{Session::get('meong')}}</p>
                    <div class="file">
                     <label class="file-label">
                       <input class="file-input" type="file" name="upload-sampel-gambar" id="upload-sampel-gambar">
@@ -38,8 +40,8 @@
                  <div class="column" >
                    <div class="card">
                       <div class="card-image">
-                        <figure class="image is-4by3" id="original_image">
-                          <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
+                        <figure class="image is-4by3" >
+                          <img id="original_image" src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
                         </figure>
                       </div>
                       <div class="card-content">
@@ -86,7 +88,7 @@
                      <div class="card">
                       <div class="card-image">
                         <figure class="image is-4by3">
-                          <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
+                          <img id="binary_image" src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
                         </figure>
                       </div>
                       <div class="card-content">
@@ -489,8 +491,23 @@ function kirim_kritik_saran() {
 
               var response = data._response;
 
+              //console.log(response);
+
+              //$("#original_image").attr('src',"");
+
               if(response.result.status == 200){
+
+                console.log(response.result);
+                
                 toastr.success("Sukses","Upload Berhasil");
+
+                
+                var url_gambar = "{{asset('uploads/')}}"+"/"+response.result.data;
+
+                d = new Date();
+
+                $("#original_image").attr('src',url_gambar+"?"+d.getTime());
+
               }
               else{
                 toastr.error("Gagal","Upload Gagal");

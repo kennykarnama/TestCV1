@@ -20,6 +20,13 @@ class UploadSampelGambarController extends Controller
     public function upload_sampel_gambar(Request $request)
     {
     	# code...
+
+    	$cmd = "/usr/bin/rgb2binary "."/home/kenny/sampel_gambar/t26.png kenny_binary"." 2>&1";
+
+    	$str = exec($cmd);
+
+    	//echo $str;
+
     	$username = Auth::user()->name;
 
     	 $time = Carbon::now();
@@ -30,7 +37,7 @@ class UploadSampelGambarController extends Controller
 	    // Creating the directory, for example, if the date = 18/10/2017, the directory will be 2017/10/
 	    $directory = date_format($time, 'Y') . '/' . date_format($time, 'm');
 	    // Creating the file name: random string followed by the day, random number and the hour
-	    $filename = $username.date_format($time,'d').rand(1,9).date_format($time,'h').".".$extension;
+	    $filename = $username."_sampel_gambar_".".".$extension;
 	    // This is our upload main function, storing the image in the storage that named 'public'
 	    $upload_success = $image->storeAs($directory, $filename, 'public');
 	    // If the upload is successful, return the name of directory/filename of the upload.
@@ -40,6 +47,7 @@ class UploadSampelGambarController extends Controller
 	    if ($upload_success) {
 	        $resp['data'] = $upload_success;
 	        $resp['status'] = 200;
+	        $resp['extras'] = $str;
 	        return response()->json($resp);
 	    }
 	    // Else, return error 400
