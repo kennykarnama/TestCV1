@@ -54,35 +54,11 @@
 
                        <div class="content  has-text-centered">
 
-                       <a class="button is-outlined is-success" style="margin-bottom: 15px;">To GrayScale</a>
+                       <a class="button is-outlined is-success" style="margin-bottom: 15px;" id="btn-ubah-ke-binary">To Binary Image</a>
                      
                       </div>
                   </div>
                 </div>
-
-                 <div class="column">
-                     <div class="card">
-                      <div class="card-image">
-                        <figure class="image is-4by3">
-                          <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
-                        </figure>
-                      </div>
-                      <div class="card-content">
-                        <div class="media">
-                          <div class="media-content">
-                            <p class="title is-4" style="text-align: center;">GrayScaled Image</p>
-                          </div>
-                        </div>
-                      </div>
-
-                       <div class="content  has-text-centered">
-
-                       <a class="button is-outlined is-success" style="margin-bottom: 15px;">To Binary</a>
-                     
-                      </div>
-                 </div>
-
-               </div>
 
                <div class="column">
                      <div class="card">
@@ -369,6 +345,46 @@ function kirim_kritik_saran() {
     });
 
 }
+
+function convert_to_binary_image() {
+  // body...
+
+      $.ajaxSetup({
+                  headers: {
+                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  }
+              });
+
+        $.ajax({
+            url: "{{url('pengguna/pengenalan/convert_to_binary_image')}}",
+            type: "POST",
+            data: {
+
+             
+                  
+            },
+            dataType: "json",
+            success: function (data) {
+              
+              if(data==""){
+                toastr.success("Sukses","Berhasil diubah");
+              }
+
+              else{
+                toastr.success("Gagal",data);
+              }
+                
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                
+                toastr.error("Gagal","Konversi gagal");
+               
+
+                console.log(thrownError);
+            }
+        });
+
+}
     
     $(document).ready(function () {
         // body...
@@ -477,6 +493,11 @@ function kirim_kritik_saran() {
             kirim_kritik_saran();
         });
 
+        $('#btn-ubah-ke-binary').click(function () {
+          // body...
+          convert_to_binary_image();
+        });
+
           $.ajaxSetup({
                   headers: {
                       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -497,10 +518,13 @@ function kirim_kritik_saran() {
 
               if(response.result.status == 200){
 
-                console.log(response.result);
-                
-                toastr.success("Sukses","Upload Berhasil");
+                // console.log(response.result);
 
+                
+                   toastr.success("Sukses","Upload Berhasil");
+                
+
+                
                 
                 var url_gambar = "{{asset('uploads/')}}"+"/"+response.result.data;
 
@@ -515,6 +539,7 @@ function kirim_kritik_saran() {
               
             },
             progressall: function (e, data) {
+                
                 var progress = parseInt(data.loaded / data.total * 100, 10);
                 
                 $('#progress_upload_file').attr('value',progress);
