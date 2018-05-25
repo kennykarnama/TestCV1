@@ -48,6 +48,7 @@ class UploadSampelGambarController extends Controller
 		try {
 
 		   UploadedFiles::where('uploaded_by_user','=',Auth::user()->id)
+		  
 		   				  ->delete();
 
 		   	// insert ke tabel uploaded_files

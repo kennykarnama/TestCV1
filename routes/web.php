@@ -52,6 +52,10 @@ Route::group(['prefix' => 'pengguna'], function () {
 
 Route::post('/pengenalan/convert_to_binary_image', 'PenggunaAuth\PengenalanController@convert_to_binary_image')->name('pengenalan.convert_to_binary_image');
 
+Route::post('/pengenalan/segment_line', 'PenggunaAuth\PengenalanController@segment_line')->name('pengenalan.segment_line');
+
+Route::post('/pengenalan/allLines', 'PenggunaAuth\PengenalanController@allLines')->name('pengenalan.allLines');
+
   
   
 });

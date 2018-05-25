@@ -1,6 +1,10 @@
 @extends('pengguna.layout.general')
 
 @section('content')
+
+<style type="text/css">
+  th.dt-center, td.dt-center { text-align: center; }
+</style>
  <div class="columns" id="mail-app">
         <aside class="column is-3 aside hero is-fullheight">
             <div>
@@ -18,7 +22,7 @@
            
                <div class="box box-pengenalan" id="box-pengenalan">
 
-               <p>{{Session::get('meong')}}</p>
+              
                    <div class="file">
                     <label class="file-label">
                       <input class="file-input" type="file" name="upload-sampel-gambar" id="upload-sampel-gambar">
@@ -36,6 +40,7 @@
                   <progress class="progress is-success" id="progress_upload_file" value="0" max="100" style="margin-top: 15px;">60%</progress>
                </div>
 
+              
                <div class="columns box-pengenalan">
                  <div class="column" >
                    <div class="card">
@@ -77,13 +82,26 @@
 
                        <div class="content has-text-centered">
 
-                       <a class="button is-outlined is-success" style="margin-bottom: 15px;">Line Segmentation</a>
+                       <a class="button is-outlined is-success" id="btn-segment-line" style="margin-bottom: 15px;">Line Segmentation</a>
                      
                       </div>
                   </div>
                  </div>
            
                </div>
+
+                <table class="table box-pengenalan is-bordered is-fullwidth" id="tabel_segmentasi_baris">
+                  <thead>
+                    <tr>
+                      <th style="text-align: center;">Baris Ke</th>
+                      <th style="text-align: center;">Gambar</th>
+                      <th style="text-align: center;">Actions</th>
+                    </tr>
+                  </thead>
+
+                  <tbody></tbody>
+               </table>
+
           
 
           
@@ -171,6 +189,8 @@
 <script type="text/javascript">
 
 var tabel_pengajuan_singkatan;
+
+var tabel_segmentasi_baris;
 
 function ajukan_singkatan() {
   // body...
@@ -366,8 +386,16 @@ function convert_to_binary_image() {
             dataType: "json",
             success: function (data) {
               
-              if(data==""){
+              if(data!="error"){
+                
                 toastr.success("Sukses","Berhasil diubah");
+
+                var image_path = "{{asset('')}}"+"/"+data;
+
+                 d = new Date();
+
+                $("#binary_image").attr('src',image_path+"?"+d.getTime());
+
               }
 
               else{
@@ -384,6 +412,48 @@ function convert_to_binary_image() {
             }
         });
 
+}
+
+function segment_line() {
+  // body...
+  $.ajaxSetup({
+                  headers: {
+                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  }
+              });
+
+        $.ajax({
+            url: "{{url('pengguna/pengenalan/segment_line')}}",
+            type: "POST",
+            data: {
+
+             
+                  
+            },
+            dataType: "json",
+            success: function (data) {
+              
+              if(data.constructor == Array){
+
+                toastr.success("Sukses","Segementasi Baris Berhasil");
+
+                tabel_segmentasi_baris.ajax.reload();
+
+              }
+
+              else{
+                toastr.error("Gagal","Segmentasi Baris Gagal");
+              }
+                
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                
+                toastr.error("Gagal","Segmentasi Baris Gagal");
+               
+
+                console.log(thrownError);
+            }
+        });
 }
     
     $(document).ready(function () {
@@ -481,6 +551,35 @@ function convert_to_binary_image() {
 
     });
 
+        tabel_segmentasi_baris = $('#tabel_segmentasi_baris').DataTable({
+    
+       "processing": true,
+            "serverSide": true,
+            "order": [],
+            "searching":false,
+            "columnDefs": [
+    { "orderable": false, "targets": [0,1,2] },
+     {"className": "dt-center", "targets": "_all"}
+  ] 
+      ,
+            "ajax":{
+                     "url": "{{ url('pengguna/pengenalan/allLines') }}",
+                     "dataType": "json",
+                     "type": "POST",
+                     "data":{
+                      _token: "{{csrf_token()}}",
+                    
+                  }
+                   },
+            "columns": [
+                {data: 'no', name: 'no'},
+                {data: 'gambar', name: 'gambar'},
+                {data: 'actions', name: 'actions'}
+               
+            ]
+
+    });
+
         $('#tabel_pengajuan_singkatan tbody').on('click','.btn-batalkan-pengajuan',function () {
           // body...
           var id_singkatan = $(this).data('idsingkatan');
@@ -489,6 +588,7 @@ function convert_to_binary_image() {
           batalkan_pengajuan(id_singkatan);
         });
 
+
         $('#btn-kirim-kritiksaran').click(function() {
             kirim_kritik_saran();
         });
@@ -496,6 +596,11 @@ function convert_to_binary_image() {
         $('#btn-ubah-ke-binary').click(function () {
           // body...
           convert_to_binary_image();
+        });
+
+        $('#btn-segment-line').click(function () {
+          // body...
+          segment_line();
         });
 
           $.ajaxSetup({
