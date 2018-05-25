@@ -16,7 +16,7 @@
         <div class="column is-9 messages hero is-fullheight" id="message-feed">
            
            
-               <div class="box" id="box-pengenalan">
+               <div class="box box-pengenalan" id="box-pengenalan">
 
                <p>{{Session::get('meong')}}</p>
                    <div class="file">
@@ -36,7 +36,7 @@
                   <progress class="progress is-success" id="progress_upload_file" value="0" max="100" style="margin-top: 15px;">60%</progress>
                </div>
 
-               <div class="columns">
+               <div class="columns box-pengenalan">
                  <div class="column" >
                    <div class="card">
                       <div class="card-image">
@@ -396,7 +396,7 @@ function convert_to_binary_image() {
 
             $('#li-kritik-saran').removeClass('active');
 
-            $('#box-pengenalan').show();
+            $('.box-pengenalan').show();
 
             $('#box-singkatan').hide();
 
@@ -414,7 +414,7 @@ function convert_to_binary_image() {
 
             $("#box-singkatan").show();
 
-            $('#box-pengenalan').hide();
+            $('.box-pengenalan').hide();
 
             $('#box-kritik-saran').hide();
 
@@ -432,7 +432,7 @@ function convert_to_binary_image() {
 
             $('#box-singkatan').hide();
 
-            $('#box-pengenalan').hide();
+            $('.box-pengenalan').hide();
 
         });
 
