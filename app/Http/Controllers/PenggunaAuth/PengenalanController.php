@@ -216,6 +216,62 @@ class PengenalanController extends Controller
 
    }
 
+   public function segment_words(Request $request)
+   {
+     # code...
+     $id_uploaded_file = $request['id_img_baris'];
+
+     $jenis_segmentasi = $request['jenis_segmentasi'];
+
+
+      $user_id = Auth::user()->id;
+
+      $username = Auth::user()->name;
+
+      $query_uploaded_files = UploadedFiles::where('uploaded_by_user','=',$user_id)
+                                            ->where('uploaded_file_type','=',3)
+                                            ->where('id_uploaded_file','=',$id_uploaded_file)
+                                            ->get();
+
+      
+
+      $item_uploaded_files = $query_uploaded_files[0];
+
+      $word_image = $this->root_path."/public/".$item_uploaded_files->uploaded_file_path;
+
+      $nama_file =  str_replace(".png", "", $item_uploaded_files->uploaded_file_path);
+
+       $cmd = "/usr/bin/word_segmentation ".$word_image." ".$nama_file." ".$jenis_segmentasi." 2>&1";
+
+       $str = exec($cmd);
+
+       $now = Carbon::now();
+
+       if(strcmp($str, "error")!=0){
+
+         if(strcmp($jenis_segmentasi, "segmentasi_kata_tam")==0){
+
+          $status = $this->bulk_insert_into_uploaded_files($str,6);
+
+         }
+
+         else if(strcmp($jenis_segmentasi, "segmentasi_kata_iqm")==0){
+
+          $status = $this->bulk_insert_into_uploaded_files($str,7);
+
+         }
+
+         if(!$status)
+          $str = "error";
+         
+       }  
+
+
+
+      return response()->json($str);
+
+   }
+
    private function insert_into_uploaded_files($file_path,$file_type,$now){
       $uploaded_files = new UploadedFiles;
 

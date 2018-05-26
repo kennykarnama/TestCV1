@@ -40,4 +40,60 @@
 </div>
 
 
+
+<script type="text/javascript">
+
+function lihat_hasil_segmentasi(id_img_baris,jenis_segmentasi) {
+	// body...
+	  $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+
+        $.ajax({
+            url: "{{url('pengguna/pengenalan/segment_words')}}",
+            type: "POST",
+            data: {
+
+                "id_img_baris":id_img_baris,
+                "jenis_segmentasi":jenis_segmentasi
+                        
+            },
+            dataType: "json",
+            success: function (data) {
+
+            	console.log(data);
+                
+
+               if(data!="error"){
+               
+
+               }
+
+               else{
+               	toastr.error("Error","Segmentasi Kata gagal");
+               }
+
+                
+            }
+            
+        });
+}
+	
+	$(document).ready(function () {
+		// body...
+		$('.btn-lihat-hasil-segmentasi-kata').click(function () {
+			// body...
+			var id_img_baris = $(this).data('idimgbaris');
+
+			var jenis_segmentasi = $(this).data('jenissegmentasi');
+
+			//alert(id_img_baris+" "+jenis_segmentasi);
+			lihat_hasil_segmentasi(id_img_baris,jenis_segmentasi);
+		});
+	});
+</script>
+
+
 @stop

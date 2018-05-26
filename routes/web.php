@@ -56,6 +56,9 @@ Route::post('/pengenalan/segment_line', 'PenggunaAuth\PengenalanController@segme
 
 Route::post('/pengenalan/visualize_segmented_words', 'PenggunaAuth\PengenalanController@visualize_segmented_words')->name('pengenalan.visualize_segmented_words');
 
+Route::post('/pengenalan/segment_words', 'PenggunaAuth\PengenalanController@segment_words')->name('pengenalan.segment_words');
+
+
 Route::post('/pengenalan/allLines', 'PenggunaAuth\PengenalanController@allLines')->name('pengenalan.allLines');
 
  Route::get('/segmentasi_baris', 'PenggunaAuth\SegmentasiBarisController@index');

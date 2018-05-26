@@ -93,6 +93,14 @@ class SegmentasiKataController extends Controller
 
 	        $keterangan = $visualisasi_segmentasi_kata->image_type_name;
 
+	        if(strpos($keterangan, "TAM")!=FALSE){
+	        	$jenis_segmentasi = "segmentasi_kata_tam";
+	        }
+
+	        else if(strpos($keterangan, "IQM")!=FALSE){
+	        	$jenis_segmentasi = "segmentasi_kata_iqm";
+	        }
+
 	        $html_img_visual = ' <div class="card">
 	                      <div class="card-image">
 	                        <figure class="image is-512x512" >
@@ -109,7 +117,8 @@ class SegmentasiKataController extends Controller
 
 	                       <div class="content  has-text-centered">
 
-	                       <a class="button is-success is-outlined">Lihat Hasil</a>
+	                       <a class="button is-success is-outlined btn-lihat-hasil-segmentasi-kata" data-idimgbaris='.$id_img_baris.'
+	                        data-jenissegmentasi='.$jenis_segmentasi.'>Lihat Hasil</a>
 	                     
 	                      </div>
 	                  </div>';
@@ -120,7 +129,8 @@ class SegmentasiKataController extends Controller
 
     	return view('pengguna/segmentasi_kata',[
     		'html_img_line'=>$html_img_line,
-    		'visualisasi_images'=>$visualisasi_images
+    		'visualisasi_images'=>$visualisasi_images,
+    		'id_img_baris'=>$id_img_baris
     		]);
 
     	
