@@ -43,7 +43,7 @@
 
 <script type="text/javascript">
 
-function lihat_hasil_segmentasi(id_img_baris,jenis_segmentasi) {
+function lihat_hasil_segmentasi(id_img_baris,jenis_segmentasi,kode_segmentasi) {
 	// body...
 	  $.ajaxSetup({
                         headers: {
@@ -67,7 +67,16 @@ function lihat_hasil_segmentasi(id_img_baris,jenis_segmentasi) {
                 
 
                if(data!="error"){
-               
+               	
+               		var url = "{{url('pengguna/segmentasi_kata/hasil_segmentasi_kata/{id_img_baris}/{jenis_segmentasi}')}}";
+
+               		url = url.replace('{id_img_baris}',id_img_baris);
+
+               		url = url.replace('{jenis_segmentasi}',kode_segmentasi);
+
+               		var win = window.open(url,"_blank");
+
+               		
 
                }
 
@@ -89,8 +98,10 @@ function lihat_hasil_segmentasi(id_img_baris,jenis_segmentasi) {
 
 			var jenis_segmentasi = $(this).data('jenissegmentasi');
 
-			//alert(id_img_baris+" "+jenis_segmentasi);
-			lihat_hasil_segmentasi(id_img_baris,jenis_segmentasi);
+			var kode_segmentasi = $(this).data('kodesegmentasikata');
+
+			//alert(id_img_baris+" "+jenis_segmentasi+" "+kode_segmentasi);
+			lihat_hasil_segmentasi(id_img_baris,jenis_segmentasi,kode_segmentasi);
 		});
 	});
 </script>

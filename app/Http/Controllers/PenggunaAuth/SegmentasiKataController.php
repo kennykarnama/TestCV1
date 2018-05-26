@@ -93,12 +93,16 @@ class SegmentasiKataController extends Controller
 
 	        $keterangan = $visualisasi_segmentasi_kata->image_type_name;
 
+            $kode_segmentasi_kata = -1;
+
 	        if(strpos($keterangan, "TAM")!=FALSE){
 	        	$jenis_segmentasi = "segmentasi_kata_tam";
+                $kode_segmentasi_kata = 6;
 	        }
 
 	        else if(strpos($keterangan, "IQM")!=FALSE){
 	        	$jenis_segmentasi = "segmentasi_kata_iqm";
+                $kode_segmentasi_kata = 7;
 	        }
 
 	        $html_img_visual = ' <div class="card">
@@ -118,7 +122,7 @@ class SegmentasiKataController extends Controller
 	                       <div class="content  has-text-centered">
 
 	                       <a class="button is-success is-outlined btn-lihat-hasil-segmentasi-kata" data-idimgbaris='.$id_img_baris.'
-	                        data-jenissegmentasi='.$jenis_segmentasi.'>Lihat Hasil</a>
+	                        data-jenissegmentasi='.$jenis_segmentasi.' data-kodesegmentasikata='.$kode_segmentasi_kata.'>Lihat Hasil</a>
 	                     
 	                      </div>
 	                  </div>';
@@ -134,6 +138,82 @@ class SegmentasiKataController extends Controller
     		]);
 
     	
+    }
+
+    public function view_hasil_segmentasi_kata($id_img_baris,$jenis_segmentasi)
+    {
+        # code...
+        $query_img = UploadedFiles::find($id_img_baris);
+
+        if($query_img->count()){
+            $trimmed = $query_img->uploaded_file_path;
+
+            $trimmed = str_replace(".png", "", $trimmed);
+
+            $trimmed = str_replace(Auth::user()->name,"",$trimmed);
+
+            $query_words = UploadedFiles::where('uploaded_by_user','=',Auth::user()->id)
+                                          ->where('uploaded_file_type','=',$jenis_segmentasi)
+                                          ->get();
+
+            $final_query = array();
+
+            foreach ($query_words as $word) {
+                # code...
+                if(strpos($word->uploaded_file_path, $trimmed)!=FALSE){
+                    array_push($final_query, $word);
+                }
+            }
+
+            $query_words = $final_query;
+
+            $kata_ke = 1;
+
+            $list_words = array();
+
+            foreach ($query_words as $word) {
+                # code...
+                $src_gambar = asset('');
+
+                $src_gambar.=$word->uploaded_file_path;
+
+                 $html_img_word = ' <div class="card">
+                          <div class="card-image">
+                            <figure class="image is-128x128" >
+                              <img  src="'.$src_gambar.'" alt="Placeholder image">
+                            </figure>
+                          </div>
+                          <div class="card-content">
+                            <div class="media">
+                              <div class="media-content">
+                                <p class="title is-4" style="text-align: center;"> Kata '.$kata_ke++.'</p>
+                              </div>
+                            </div>
+                          </div>
+
+                           <div class="content  has-text-centered">
+                         
+                          </div>
+                      </div>';
+
+                array_push($list_words, $html_img_word);
+
+            }
+
+            if($jenis_segmentasi == 6){
+                $jenis_segmentasi_yg_digunakan = "TAM";
+            }
+
+            else{
+                $jenis_segmentasi_yg_digunakan = "IQM";
+            }
+
+            return view('pengguna.hasil_segmentasi_kata',[
+                'list_words'=>$list_words,
+                'jenis_segmentasi_yg_digunakan'=>$jenis_segmentasi_yg_digunakan
+                ]);
+        }
+
     }
 
     private function translate_file_path($filePath){

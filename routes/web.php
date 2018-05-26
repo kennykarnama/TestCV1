@@ -65,5 +65,6 @@ Route::post('/pengenalan/allLines', 'PenggunaAuth\PengenalanController@allLines'
  
  Route::get('/segmentasi_kata/{id_img_baris}', 'PenggunaAuth\SegmentasiKataController@segmentasi_kata');
   
+ Route::get('/segmentasi_kata/hasil_segmentasi_kata/{id_img_baris}/{jenis_segmentasi}', 'PenggunaAuth\SegmentasiKataController@view_hasil_segmentasi_kata');
   
 });
