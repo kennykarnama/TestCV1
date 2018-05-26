@@ -151,6 +151,113 @@ class PengenalanController extends Controller
 
    }
 
+   public function visualize_segmented_words(Request $request)
+   {
+     # code...
+
+    $id_uploaded_file = $request['id_img_baris'];
+
+      $user_id = Auth::user()->id;
+
+      $username = Auth::user()->name;
+
+      $query_uploaded_files = UploadedFiles::where('uploaded_by_user','=',$user_id)
+                                            ->where('uploaded_file_type','=',3)
+                                            ->where('id_uploaded_file','=',$id_uploaded_file)
+                                            ->get();
+
+      
+
+      $item_uploaded_files = $query_uploaded_files[0];
+
+      $word_image = $this->root_path."/public/".$item_uploaded_files->uploaded_file_path;
+
+      $nama_file =  str_replace(".png", "", $item_uploaded_files->uploaded_file_path);
+
+       $cmd = "/usr/bin/word_segmentation ".$word_image." ".$nama_file." visualisasi"." 2>&1";
+
+       $str = exec($cmd);
+
+       $now = Carbon::now();
+
+       if(strcmp($str, "error")!=0){
+
+          $file_paths = explode(",", $str);
+
+
+
+          
+          DB::beginTransaction();
+
+          try {
+              
+              $this->insert_into_uploaded_files($file_paths[0],4,$now);
+              
+              $this->insert_into_uploaded_files($file_paths[1],5,$now);
+              
+  
+              DB::commit();
+
+
+              // all good
+          } catch (\Exception $e) {
+              DB::rollback();
+              // something went wrong
+
+              $str = "error";
+
+              throw $e;
+          }
+       }  
+
+
+
+      return response()->json($str);
+
+   }
+
+   private function insert_into_uploaded_files($file_path,$file_type,$now){
+      $uploaded_files = new UploadedFiles;
+
+      $uploaded_files->uploaded_file_path = $file_path;
+
+      $uploaded_files->uploaded_by_user = Auth::user()->id;
+
+      $uploaded_files->uploaded_file_extension = 'png';
+
+      $uploaded_files->uploaded_file_type = $file_type;
+
+      $uploaded_files->uploaded_at = $now;
+
+      return $uploaded_files->save();
+   }
+
+   private function bulk_insert_into_uploaded_files($output_str,$file_type){
+
+    $file_paths = explode(",", $output_str);
+
+    $user_id = Auth::user()->id;
+
+    $now = Carbon::now();
+
+    $data = array();
+
+        for($i=0;$i<count($file_paths);$i++){
+          $nested = array(
+              'uploaded_file_path'=>$file_paths[$i],
+              'uploaded_by_user'=>$user_id,
+              'uploaded_file_extension'=>'png',
+              'uploaded_file_type'=>$file_type,
+              'uploaded_at'=>$now
+            );
+
+          array_push($data, $nested);
+        }
+
+    return UploadedFiles::insert($data);
+
+   }
+
    public function allLines(Request $request)
    {
      # code...

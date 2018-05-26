@@ -54,8 +54,13 @@ Route::post('/pengenalan/convert_to_binary_image', 'PenggunaAuth\PengenalanContr
 
 Route::post('/pengenalan/segment_line', 'PenggunaAuth\PengenalanController@segment_line')->name('pengenalan.segment_line');
 
+Route::post('/pengenalan/visualize_segmented_words', 'PenggunaAuth\PengenalanController@visualize_segmented_words')->name('pengenalan.visualize_segmented_words');
+
 Route::post('/pengenalan/allLines', 'PenggunaAuth\PengenalanController@allLines')->name('pengenalan.allLines');
 
+ Route::get('/segmentasi_baris', 'PenggunaAuth\SegmentasiBarisController@index');
+ 
+ Route::get('/segmentasi_kata/{id_img_baris}', 'PenggunaAuth\SegmentasiKataController@segmentasi_kata');
   
   
 });

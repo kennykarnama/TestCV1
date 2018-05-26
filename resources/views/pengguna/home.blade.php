@@ -90,19 +90,7 @@
            
                </div>
 
-                <table class="table box-pengenalan is-bordered is-fullwidth" id="tabel_segmentasi_baris">
-                  <thead>
-                    <tr>
-                      <th style="text-align: center;">Baris Ke</th>
-                      <th style="text-align: center;">Gambar</th>
-                      <th style="text-align: center;">Actions</th>
-                    </tr>
-                  </thead>
-
-                  <tbody></tbody>
-               </table>
-
-          
+               
 
           
 
@@ -151,7 +139,7 @@
            
         </div>
        
-    </div>
+</div>
 
 <div class="modal" id="modal-pengajuan-singkatan">
   <div class="modal-background"></div>
@@ -184,13 +172,32 @@
   </div>
 </div>
 
+<div class="modal" id="modal-pesan-segmentasi-baris">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Segmentasi Baris</p>
+      <button class="delete btn-tutup-modal" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <!-- Content ... -->
+      <p>Segmentasi Baris telah selesai</p>
+
+    </section>
+    <footer class="modal-card-foot">
+    <a href="{{url('pengguna/segmentasi_baris')}}" class="button is-success">Lihat Hasil</a>
+      <button class="button btn-tutup-modal is-danger">Tutup</button>
+    </footer>
+  </div>
+</div>
+
 
 
 <script type="text/javascript">
 
 var tabel_pengajuan_singkatan;
 
-var tabel_segmentasi_baris;
+
 
 function ajukan_singkatan() {
   // body...
@@ -435,9 +442,10 @@ function segment_line() {
               
               if(data.constructor == Array){
 
-                toastr.success("Sukses","Segementasi Baris Berhasil");
+                //toastr.success("Sukses","Segementasi Baris Berhasil");
+                $('#modal-pesan-segmentasi-baris').addClass('is-active');
 
-                tabel_segmentasi_baris.ajax.reload();
+               
 
               }
 
@@ -551,34 +559,7 @@ function segment_line() {
 
     });
 
-        tabel_segmentasi_baris = $('#tabel_segmentasi_baris').DataTable({
-    
-       "processing": true,
-            "serverSide": true,
-            "order": [],
-            "searching":false,
-            "columnDefs": [
-    { "orderable": false, "targets": [0,1,2] },
-     {"className": "dt-center", "targets": "_all"}
-  ] 
-      ,
-            "ajax":{
-                     "url": "{{ url('pengguna/pengenalan/allLines') }}",
-                     "dataType": "json",
-                     "type": "POST",
-                     "data":{
-                      _token: "{{csrf_token()}}",
-                    
-                  }
-                   },
-            "columns": [
-                {data: 'no', name: 'no'},
-                {data: 'gambar', name: 'gambar'},
-                {data: 'actions', name: 'actions'}
-               
-            ]
-
-    });
+      
 
         $('#tabel_pengajuan_singkatan tbody').on('click','.btn-batalkan-pengajuan',function () {
           // body...
