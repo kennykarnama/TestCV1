@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use DB;
 use Auth;
 use App\UploadedFiles;
+use App\HasilPengenalan;
 use Carbon\Carbon;
 
 class PengenalanController extends Controller
@@ -14,6 +15,8 @@ class PengenalanController extends Controller
     //
 
     private $root_path;
+
+    private $alphabets;
 
     
     public function __construct()
@@ -23,8 +26,15 @@ class PengenalanController extends Controller
 
     	$this->root_path = "/var/www/html/TestCV1";
 
+      $this->alphabets = array();
+
+      for($i=0;$i < 26; $i++){
+        $this->alphabets[chr((97+$i))] = 0;
+      }
       
     }
+
+
 
    public function convert_to_binary_image(Request $request)
    {
@@ -216,6 +226,8 @@ class PengenalanController extends Controller
 
    }
 
+
+
    public function segment_words(Request $request)
    {
      # code...
@@ -314,6 +326,109 @@ class PengenalanController extends Controller
     }
 
     return response()->json($str);
+
+   }
+
+   public function segment_characters(Request $request)
+   {
+     # code...
+     $id_img_word = $request['id_img_word'];
+
+    $jenis_operasi = $request['jenis_operasi'];
+
+    $query_img_word = UploadedFiles::find($id_img_word);
+
+    $str = "";
+
+    if($query_img_word->count()){
+
+      $word_image = $this->root_path."/public/".$query_img_word->uploaded_file_path;
+
+      $nama_file = str_replace(".png", "", $query_img_word->uploaded_file_path);
+
+
+       $cmd = "/usr/bin/character_segmentation ".$word_image." ".$nama_file." ".$jenis_operasi." 2>&1";
+
+       $str = exec($cmd);
+
+       if(strcmp($str, "error") != 0){
+         $status =  $this->bulk_insert_into_uploaded_files($str,8);
+
+         if(!$status)
+            $str = "error";
+       }
+
+       
+
+
+
+    }
+
+    else{
+
+      $str = "error";
+
+    }
+
+    return response()->json($str);
+
+   }
+
+   public function recognize(Request $request)
+   {
+     # code...
+      
+      $id_img_character = $request['id_img_character'];
+
+      $query_img_character = UploadedFiles::find($id_img_character);
+
+       $char_image = $this->root_path."/public/".$query_img_character->uploaded_file_path;
+
+       //return response()->json($char_image);
+       $cmd = "/usr/bin/neural_network ".$char_image." 2>&1";
+
+       $str = exec($cmd);
+
+       if(strcmp($str, "error")!=0){
+
+          $target_outputs = array_map("doubleval", explode(";", $str));
+
+          for($i=0;$i<count($this->alphabets);$i++){
+            $this->alphabets[chr(97+$i)] = $target_outputs[$i];
+          }
+
+          if(count($target_outputs)>0){
+            $hasil_pengenalan = new HasilPengenalan;
+
+            $hasil_pengenalan->id_img_character = $id_img_character;
+
+            $hasil_pengenalan->target_outputs = $str;
+
+            $hasil_pengenalan->created_at = Carbon::now();
+
+            $status = $hasil_pengenalan->save();
+
+            if($status){
+               return response()->json($this->alphabets);
+            }
+
+            else{
+              return response()->json("error");
+            }
+          }
+
+         
+
+
+       }
+
+       else{
+
+        return response()->json($str);
+ 
+       }
+
+       
 
    }
 

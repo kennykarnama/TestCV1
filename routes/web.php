@@ -58,6 +58,10 @@ Route::post('/pengenalan/visualize_segmented_words', 'PenggunaAuth\PengenalanCon
 
 Route::post('/pengenalan/segment_words', 'PenggunaAuth\PengenalanController@segment_words')->name('pengenalan.segment_words');
 
+Route::post('/pengenalan/segment_characters', 'PenggunaAuth\PengenalanController@segment_characters')->name('pengenalan.segment_characters');
+
+Route::post('/pengenalan/recognize', 'PenggunaAuth\PengenalanController@recognize')->name('pengenalan.recognize');
+
 Route::post('/pengenalan/visualize_segmented_characters', 'PenggunaAuth\PengenalanController@visualize_segmented_characters')->name('pengenalan.visualize_segmented_characters');
 
 

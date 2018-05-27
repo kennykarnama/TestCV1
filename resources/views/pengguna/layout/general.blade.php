@@ -19,7 +19,9 @@
     <link rel="stylesheet" type="text/css" href="{{asset('datatables-bulma/css/dataTables.bulma.min.css')}}">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
     <link rel="stylesheet" type="text/css" href="{{asset('jQuery-File-Upload/css/jquery.fileupload.css')}}">
-      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" type="text/css" href="{{asset('animated-modal-js/demo/css/animate.min.css')}}">
+
   
     <script
               src="https://code.jquery.com/jquery-3.3.1.min.js"

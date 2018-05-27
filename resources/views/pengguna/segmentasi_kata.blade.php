@@ -1,6 +1,8 @@
 @extends('pengguna.layout.general')
 
 @section('content')
+
+
 	
 <div class="columns" id="mail-app">
 	  <div class="column is-12 messages hero is-fullheight" id="message-feed">
@@ -33,6 +35,8 @@
 	  		@endforeach
 	  		
 	  </div>
+
+	 
 	  	
 	  </div>
 	  

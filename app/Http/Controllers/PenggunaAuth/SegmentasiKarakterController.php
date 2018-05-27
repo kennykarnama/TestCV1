@@ -73,11 +73,52 @@ class SegmentasiKarakterController extends Controller
                 array_push($list_visualisasi_karakter, $html_img_word);
     	}
 
+    	$query_segmented_characters = UploadedFiles::where('uploaded_by_user','=',Auth::user()->id)
+    												            ->where('uploaded_file_type','=',8)
+    												            ->where('uploaded_file_path','LIKE','%'.$trimmed.'%')
+    												            ->where('id_uploaded_file','!=',$id_img_word)
+    												            ->get();
+
+   		$list_karakter = array();
+
+    	$karakter_ke = 1;
+
+    	foreach ($query_segmented_characters as $segmentasi_character) {
+    		# code...
+    		$src_gambar = asset('');
+
+                $src_gambar.=$segmentasi_character->uploaded_file_path;
+
+                 $html_img_word = '<div class="card">
+                          <div class="card-image">
+                            <figure class="image is-32x32" >
+                              <img  src="'.$src_gambar.'" alt="Placeholder image">
+                            </figure>
+                          </div>
+                          <div class="card-content">
+                            <div class="media">
+                              <div class="media-content">
+                                <p class="title is-4" style="text-align: center;"> Kata '.$karakter_ke++.'</p>
+                              </div>
+                            </div>
+                          </div>
+
+                           <div class="content  has-text-centered">
+
+                           <a class="button is-success is-outlined btn-kenali" data-idimgcharacter='.$segmentasi_character->id_uploaded_file.'>Recognize</a>
+                          </div>
+                      </div>';
+
+                array_push($list_karakter, $html_img_word);
+    	}
+
+
     	return view('pengguna.segmentasi_karakter',[
     			'id_img_word'=>$id_img_word,
     			'id_jenis_segmentasi'=>$id_jenis_segmentasi,
     			'nama_segmentasi_kata'=>$nama_segmentasi_kata,
-    			'list_visualisasi_karakter'=>$list_visualisasi_karakter
+    			'list_visualisasi_karakter'=>$list_visualisasi_karakter,
+    			'list_karakter'=>$list_karakter
     		]);
     }
 }
