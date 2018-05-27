@@ -177,7 +177,7 @@ class SegmentasiKataController extends Controller
 
                 $src_gambar.=$word->uploaded_file_path;
 
-                 $html_img_word = ' <div class="card">
+                 $html_img_word = '<div class="card">
                           <div class="card-image">
                             <figure class="image is-128x128" >
                               <img  src="'.$src_gambar.'" alt="Placeholder image">
@@ -192,6 +192,9 @@ class SegmentasiKataController extends Controller
                           </div>
 
                            <div class="content  has-text-centered">
+
+                           <a class="button is-success is-outlined btn-lihat-hasil-segmentasi-karakter"
+                            data-idimgword='.$word->id_uploaded_file.'>Character Segmentation</a>
                          
                           </div>
                       </div>';
@@ -210,7 +213,8 @@ class SegmentasiKataController extends Controller
 
             return view('pengguna.hasil_segmentasi_kata',[
                 'list_words'=>$list_words,
-                'jenis_segmentasi_yg_digunakan'=>$jenis_segmentasi_yg_digunakan
+                'jenis_segmentasi_yg_digunakan'=>$jenis_segmentasi_yg_digunakan,
+                'id_jenis_segmentasi'=>$jenis_segmentasi
                 ]);
         }
 

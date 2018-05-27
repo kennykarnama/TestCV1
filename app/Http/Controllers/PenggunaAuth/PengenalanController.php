@@ -272,6 +272,53 @@ class PengenalanController extends Controller
 
    }
 
+   public function visualize_segmented_characters(Request $request)
+   {
+     # code...
+    $id_img_word = $request['id_img_word'];
+
+    $jenis_operasi = $request['jenis_operasi'];
+
+    $query_img_word = UploadedFiles::find($id_img_word);
+
+    $str = "";
+
+    if($query_img_word->count()){
+
+      $word_image = $this->root_path."/public/".$query_img_word->uploaded_file_path;
+
+      $nama_file = str_replace(".png", "", $query_img_word->uploaded_file_path);
+
+
+       $cmd = "/usr/bin/character_segmentation ".$word_image." ".$nama_file." ".$jenis_operasi." 2>&1";
+
+       $str = exec($cmd);
+
+       if(strcmp($str, "error") != 0){
+         $status =  $this->bulk_insert_into_uploaded_files($str,9);
+
+         if(!$status)
+            $str = "error";
+       }
+
+       
+
+
+
+    }
+
+    else{
+
+      $str = "error";
+
+    }
+
+    return response()->json($str);
+
+   }
+
+   
+
    private function insert_into_uploaded_files($file_path,$file_type,$now){
       $uploaded_files = new UploadedFiles;
 

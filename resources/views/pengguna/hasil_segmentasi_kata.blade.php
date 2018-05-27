@@ -37,5 +37,59 @@ Please Wait
 	  </div>
 </div>
 
+<script type="text/javascript">
+
+function visualisasi_segmentasi_karakter(id_img_word,id_jenis_segmentasi) {
+		// body...
+		  $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+
+        $.ajax({
+            url: "{{url('pengguna/pengenalan/visualize_segmented_characters')}}",
+            type: "POST",
+            data: {
+
+              "id_img_word":id_img_word,
+              "jenis_operasi":"visualisasi"
+                        
+            },
+            dataType: "json",
+            success: function (data) {
+
+            	console.log(data);
+                
+            	var url = "{{url('pengguna/segmentasi_karakter/{id_img_word}/{id_jenis_segmentasi}')}}";
+
+				url = url.replace('{id_img_word}',id_img_word);
+
+				url = url.replace('{id_jenis_segmentasi}',id_jenis_segmentasi);
+
+				var win = window.open(url,"_blank");
+               	
+                
+            }
+            
+        });
+	}
+
+
+	$(document).ready(function () {
+		// body...
+		$('.btn-lihat-hasil-segmentasi-karakter').click(function () {
+			// body...
+
+			var id_img_word = $(this).data('idimgword');
+
+			var id_jenis_segmentasi = "{{$id_jenis_segmentasi}}";
+			
+			//alert(id_img_word+" "+id_jenis_segmentasi);
+			visualisasi_segmentasi_karakter(id_img_word,id_jenis_segmentasi);
+		});
+	});
+</script>
+
 
 @stop

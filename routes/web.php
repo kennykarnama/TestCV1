@@ -58,6 +58,8 @@ Route::post('/pengenalan/visualize_segmented_words', 'PenggunaAuth\PengenalanCon
 
 Route::post('/pengenalan/segment_words', 'PenggunaAuth\PengenalanController@segment_words')->name('pengenalan.segment_words');
 
+Route::post('/pengenalan/visualize_segmented_characters', 'PenggunaAuth\PengenalanController@visualize_segmented_characters')->name('pengenalan.visualize_segmented_characters');
+
 
 Route::post('/pengenalan/allLines', 'PenggunaAuth\PengenalanController@allLines')->name('pengenalan.allLines');
 
@@ -66,5 +68,7 @@ Route::post('/pengenalan/allLines', 'PenggunaAuth\PengenalanController@allLines'
  Route::get('/segmentasi_kata/{id_img_baris}', 'PenggunaAuth\SegmentasiKataController@segmentasi_kata');
   
  Route::get('/segmentasi_kata/hasil_segmentasi_kata/{id_img_baris}/{jenis_segmentasi}', 'PenggunaAuth\SegmentasiKataController@view_hasil_segmentasi_kata');
+
+ Route::get('/segmentasi_karakter/{id_img_word}/{id_jenis_segmentasi}', 'PenggunaAuth\SegmentasiKarakterController@index');
   
 });
