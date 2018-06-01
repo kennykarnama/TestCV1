@@ -53,6 +53,12 @@ class SegmentasiBarisController extends Controller
 
                        <a class="button is-outlined is-success btn-segmentasi-kata" style="margin-bottom: 15px;" 
                        data-idimgbaris='.$line->id_uploaded_file.'>Word Segmentation</a>
+
+                       <a class="button is-outlined is-primary btn-deskew" style="margin-bottom: 15px;" 
+                       data-idimgbaris='.$line->id_uploaded_file.'>De-Skew</a>
+
+                        <a class="button is-outlined is-danger btn-rerun-segmentasi-baris" style="margin-bottom: 15px;" 
+                       data-idimgbaris='.$line->id_uploaded_file.'>Rerun Line Segmentation</a>
                      
                       </div>
                   </div>';

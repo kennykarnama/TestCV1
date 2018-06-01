@@ -434,7 +434,7 @@ function segment_line() {
             type: "POST",
             data: {
 
-             
+             "jenis_segmentasi_baris":"fresh"
                   
             },
             dataType: "json",

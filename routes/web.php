@@ -50,6 +50,8 @@ Route::group(['prefix' => 'pengguna'], function () {
   Route::post('/kritik_saran/kirim', 'PenggunaAuth\KritikSaranController@kirim_kritik_saran')->name('kritik_saran.kirim');
   Route::post('/pengenalan/upload', 'PenggunaAuth\UploadSampelGambarController@upload_sampel_gambar')->name('pengenalan.upload');
 
+   Route::post('/pengenalan/deskew', 'PenggunaAuth\PengenalanController@deskew')->name('pengenalan.deskew');
+
 Route::post('/pengenalan/convert_to_binary_image', 'PenggunaAuth\PengenalanController@convert_to_binary_image')->name('pengenalan.convert_to_binary_image');
 
 Route::post('/pengenalan/segment_line', 'PenggunaAuth\PengenalanController@segment_line')->name('pengenalan.segment_line');

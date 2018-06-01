@@ -34,6 +34,36 @@ class PengenalanController extends Controller
       
     }
 
+    public function deskew(Request $request)
+    {
+      # code...
+      $id_img_baris = $request['id_img_baris'];
+
+      $query_uploaded_files = UploadedFiles::find($id_img_baris);
+
+      if($query_uploaded_files->count()){
+          
+          $line_img = $this->root_path."/public/".$query_uploaded_files->uploaded_file_path;
+
+          $nama_file = $query_uploaded_files->uploaded_file_path;
+
+          $nama_file = str_replace(".png", "", $nama_file);
+
+          $cmd = "/usr/bin/skew_correction ".$line_img." ".$nama_file." 2>&1";
+
+          $str = exec($cmd);
+
+          $resp = explode(";", $str);
+
+          return response()->json($resp);
+
+      }
+
+      return response()->json("error");
+    }
+
+
+
 
 
    public function convert_to_binary_image(Request $request)
@@ -106,18 +136,43 @@ class PengenalanController extends Controller
      # code...
       // cari file dengan user id dan jenis binary (2)
 
+    $jenis_segmentasi_baris = $request['jenis_segmentasi_baris'];
+
+
+
       $user_id = Auth::user()->id;
 
       $username = Auth::user()->name;
 
-      $query_uploaded_files = UploadedFiles::where('uploaded_by_user','=',$user_id)
+      if(strcmp($jenis_segmentasi_baris, "revisi")==0){
+
+        $id_img_baris = $request['id_img_baris'];
+
+        $query_uploaded_files = UploadedFiles::find($id_img_baris);
+
+        $item_uploaded_files = $query_uploaded_files;
+
+        $part_cmd = $jenis_segmentasi_baris." ".$this->root_path."/public/";
+      }
+
+      else{
+
+        $query_uploaded_files = UploadedFiles::where('uploaded_by_user','=',$user_id)
                                             ->where('uploaded_file_type','=',2)->get();
 
-      $item_uploaded_files = $query_uploaded_files[0];
+        $item_uploaded_files = $query_uploaded_files[0];
+
+        $part_cmd = $jenis_segmentasi_baris;
+      }
+
+      
+      
 
       $binary_image = $this->root_path."/public/".$item_uploaded_files->uploaded_file_path;
 
-      $cmd = "/usr/bin/line_segmentation ".$binary_image." ".$username." 11"." 2>&1";
+      $cmd = "/usr/bin/line_segmentation ".$binary_image." ".$username." ".$part_cmd." 2>&1";
+
+
 
       $str = exec($cmd);
 
@@ -129,17 +184,25 @@ class PengenalanController extends Controller
 
         $data = array();
 
-        for($i=0;$i<count($file_paths);$i++){
-          $nested = array(
-              'uploaded_file_path'=>$file_paths[$i],
-              'uploaded_by_user'=>$user_id,
-              'uploaded_file_extension'=>'png',
-              'uploaded_file_type'=>3,
-              'uploaded_at'=>$now
-            );
+       
 
-          array_push($data, $nested);
-        }
+       
+
+             for($i=0;$i<count($file_paths);$i++){
+              $nested = array(
+                  'uploaded_file_path'=>$file_paths[$i],
+                  'uploaded_by_user'=>$user_id,
+                  'uploaded_file_extension'=>'png',
+                  'uploaded_file_type'=>3,
+                  'uploaded_at'=>$now
+                );
+
+              array_push($data, $nested);
+            }
+
+        
+
+     
 
         $status_insert = UploadedFiles::insert($data);
 
