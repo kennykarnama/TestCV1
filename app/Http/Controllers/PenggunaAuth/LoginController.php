@@ -32,6 +32,8 @@ class LoginController extends Controller
      */
     public $redirectTo = '/pengguna/home';
 
+    private $root_path;
+
     /**
      * Create a new controller instance.
      *
@@ -40,6 +42,8 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('pengguna.guest', ['except' => 'logout']);
+
+        $this->root_path = "/var/www/html/TestCV1";
     }
 
     /**
@@ -107,10 +111,30 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
+
+        $dir =  $this->root_path."/public/";
+
+        $target = $request['name'];
+
+        $cmd = "/usr/bin/file_clearer ".$dir." ".$target." 2>&1";
+
+        $str = exec($cmd);
+
+        if(strcmp($str, "ok")==0){
+        
         $this->guard()->logout();
 
         $request->session()->invalidate();
-
+        
         return 1;
+        }
+
+        else{
+            return 0;
+        }
+       
+
+        
+        //return 1;
     }
 }

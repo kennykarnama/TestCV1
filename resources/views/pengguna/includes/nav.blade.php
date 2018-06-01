@@ -48,6 +48,7 @@ function logout() {
             type: "POST",
             data: {
 
+                "name":"{{Auth::user()->name}}"
                
                         
             },
@@ -56,6 +57,8 @@ function logout() {
                 
             
              location.href="{{url('pengguna/login')}}";
+
+             //console.log(data);
 
              location.reload();
                 
