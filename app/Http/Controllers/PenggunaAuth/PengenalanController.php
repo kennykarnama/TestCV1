@@ -62,6 +62,34 @@ class PengenalanController extends Controller
       return response()->json("error");
     }
 
+    public function slant_correction(Request $request)
+    {
+      # code...
+        $id_img_kata = $request['id_img_word'];
+
+        $query_uploaded_files = UploadedFiles::find($id_img_kata);
+
+        if($query_uploaded_files->count()){
+            
+            $word_img = $this->root_path."/public/".$query_uploaded_files->uploaded_file_path;
+
+            $nama_file = $query_uploaded_files->uploaded_file_path;
+
+            $nama_file = str_replace(".png", "", $nama_file);
+
+            $cmd = "/usr/bin/slant_correction ".$word_img." ".$nama_file." 2>&1";
+
+            $str = exec($cmd);
+
+            $resp = explode(";", $str);
+
+            return response()->json($resp);
+
+        }
+
+        return response()->json("error");
+    }
+
 
 
 

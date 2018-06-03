@@ -93,6 +93,8 @@ function lihat_hasil_segmentasi(id_img_baris,jenis_segmentasi,kode_segmentasi) {
             
         });
 }
+
+
 	
 	$(document).ready(function () {
 		// body...
@@ -107,6 +109,8 @@ function lihat_hasil_segmentasi(id_img_baris,jenis_segmentasi,kode_segmentasi) {
 			//alert(id_img_baris+" "+jenis_segmentasi+" "+kode_segmentasi);
 			lihat_hasil_segmentasi(id_img_baris,jenis_segmentasi,kode_segmentasi);
 		});
+
+		
 	});
 </script>
 

@@ -123,6 +123,8 @@ class SegmentasiKataController extends Controller
 
 	                       <a class="button is-success is-outlined btn-lihat-hasil-segmentasi-kata" data-idimgbaris='.$id_img_baris.'
 	                        data-jenissegmentasi='.$jenis_segmentasi.' data-kodesegmentasikata='.$kode_segmentasi_kata.'>Lihat Hasil</a>
+
+
 	                     
 	                      </div>
 	                  </div>';
@@ -195,6 +197,10 @@ class SegmentasiKataController extends Controller
 
                            <a class="button is-success is-outlined btn-lihat-hasil-segmentasi-karakter"
                             data-idimgword='.$word->id_uploaded_file.'>Character Segmentation</a>
+
+                            <a class="button is-warning is-outlined btn-slant-correction"
+                            data-idimgword='.$word->id_uploaded_file.'>Slant Correction</a>
+                            
                          
                           </div>
                       </div>';
